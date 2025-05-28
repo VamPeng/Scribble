@@ -1,6 +1,11 @@
 # Scribble
 ## Android 照片剪辑涂鸦
 ### 功能copy自 [signal-Android](https://github.com/signalapp/Signal-Android)
+### 已有功能
+- 线条画笔
+- 文本添加
+- 高斯模糊
+- 旋转、裁剪、镜像
 ### 隐藏部分
 - 贴纸
 
