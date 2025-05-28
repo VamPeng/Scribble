@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:viewBindingIgnore="true">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/media_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/controls"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false">
+
+        <View
+            android:id="@+id/controls_shade"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:alpha="0"
+            android:background="@color/signal_dark_colorSurface"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guideline_148dp"
+            tools:alpha="1"
+            tools:background="@color/black"
+            tools:visibility="visible" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_148dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="148dp" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/draw_tool"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="16dp"
+            android:alpha="0"
+            android:background="@drawable/media_gallery_button_background"
+            android:contentDescription="@string/MediaReviewFragment__brush_pen_accessibility_label"
+            android:padding="6dp"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Signal.Circle"
+            app:srcCompat="@drawable/symbol_brush_pen_24"
+            app:tint="@color/signal_dark_colorOnSurface"
+            tools:alpha="1"
+            tools:visibility="visible" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/crop_and_rotate_tool"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="16dp"
+            android:alpha="0"
+            android:background="@drawable/media_gallery_button_background"
+            android:contentDescription="@string/MediaReviewFragment__crop_rotate_accessibility_label"
+            android:padding="4dp"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/draw_tool"
+            app:layout_goneMarginStart="10dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Signal.Circle"
+            app:srcCompat="@drawable/symbol_crop_rotate_24"
+            app:tint="@color/signal_dark_colorOnSurface"
+            tools:alpha="1"
+            tools:visibility="visible" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/quality_selector"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="16dp"
+            android:alpha="0"
+            android:background="@drawable/media_gallery_button_background"
+            android:contentDescription="@string/MediaReviewFragment__change_media_quality_accessibility_label"
+            android:padding="4dp"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/crop_and_rotate_tool"
+            app:layout_goneMarginStart="10dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Signal.Circle"
+            app:srcCompat="@drawable/symbol_quality_high_slash_24"
+            app:tint="@color/signal_dark_colorOnSurface"
+            tools:alpha="1"
+            tools:visibility="visible" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/save_to_media"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/media_gallery_button_background"
+            android:contentDescription="@string/MediaReviewFragment__save_media_accessibility_label"
+            android:padding="4dp"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/quality_selector"
+            app:layout_goneMarginStart="10dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Signal.Circle"
+            app:srcCompat="@drawable/symbol_save_android_24"
+            app:tint="@color/signal_dark_colorOnSurface"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

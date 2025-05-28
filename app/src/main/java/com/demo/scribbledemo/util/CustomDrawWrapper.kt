@@ -1,4 +1,4 @@
-package com.demo.scribbledemo.scribble
+package com.demo.scribbledemo.util
 
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable

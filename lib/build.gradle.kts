@@ -25,19 +25,19 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
 dependencies {
 
-    implementation(libs.rxjava3.rxjava)
-    implementation(libs.rxjava3.rxkotlin)
-    implementation(libs.glide.glide)
+//    implementation(libs.rxjava3.rxjava)
+//    implementation(libs.rxjava3.rxkotlin)
+//    implementation(libs.glide.glide)
 //    ksp(libs.glide.ksp)
 
     implementation(libs.androidx.core.ktx)

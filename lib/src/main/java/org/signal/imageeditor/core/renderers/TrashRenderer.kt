@@ -14,133 +14,151 @@ import org.signal.imageeditor.core.Renderer
 import org.signal.imageeditor.core.RendererContext
 import org.signal.imageeditor.R as CoreUtilR
 
-internal class TrashRenderer : InvalidateableRenderer(), Renderer, Parcelable {
-
-  private val outlinePaint = Paint().apply {
-    isAntiAlias = true
-    color = Color.WHITE
-    style = Paint.Style.STROKE
-    strokeWidth = DimensionUnit.DP.toPixels(1.5f)
-  }
-
-  private val shadePaint = Paint().apply {
-    isAntiAlias = true
-    color = 0x99000000.toInt()
-    style = Paint.Style.FILL
-  }
-
-  private val bounds = RectF()
-
-  private val diameterSmall = DimensionUnit.DP.toPixels(41f)
-  private val diameterLarge = DimensionUnit.DP.toPixels(54f)
-  private val trashSize: Int = DimensionUnit.DP.toPixels(24f).toInt()
-  private val padBottom = DimensionUnit.DP.toPixels(16f)
-  private val interpolator: Interpolator = FastOutSlowInInterpolator()
-
-  private var startTime = 0L
-
-  private var isExpanding = false
-
-  private val buttonCenter = FloatArray(2)
-
-  override fun render(rendererContext: RendererContext) {
-    super.render(rendererContext)
-
-    val frameRenderTime = System.currentTimeMillis()
-
-    val trash: Drawable = requireNotNull(AppCompatResources.getDrawable(rendererContext.context, CoreUtilR.drawable.ic_trash_white_24))
-    trash.setBounds(0, 0, trashSize, trashSize)
-
-    val diameter = getInterpolatedDiameter(frameRenderTime - startTime)
-
-    rendererContext.canvas.save()
-    rendererContext.mapRect(bounds, Bounds.FULL_BOUNDS)
-
-    buttonCenter[0] = bounds.centerX()
-    buttonCenter[1] = bounds.bottom - diameterLarge / 2f - padBottom
-
-    rendererContext.canvasMatrix.setToIdentity()
-
-    rendererContext.canvas.drawCircle(buttonCenter[0], buttonCenter[1], diameter / 2f, shadePaint)
-    rendererContext.canvas.drawCircle(buttonCenter[0], buttonCenter[1], diameter / 2f, outlinePaint)
-    rendererContext.canvas.translate(bounds.centerX(), bounds.bottom - diameterLarge / 2f - padBottom)
-    rendererContext.canvas.translate(-(trashSize / 2f), -(trashSize / 2f))
-    trash.draw(rendererContext.canvas)
-    rendererContext.canvas.restore()
-
-    if (frameRenderTime - DURATION < startTime) {
-      invalidate()
-    }
-  }
-
-  private fun getInterpolatedDiameter(timeElapsed: Long): Float {
-    return if (timeElapsed >= DURATION) {
-      if (isExpanding) {
-        diameterLarge
-      } else {
-        diameterSmall
-      }
-    } else {
-      val interpolatedFraction = interpolator.getInterpolation(timeElapsed / DURATION.toFloat())
-      if (isExpanding) {
-        interpolateFromFraction(interpolatedFraction)
-      } else {
-        interpolateFromFraction(1 - interpolatedFraction)
-      }
-    }
-  }
-
-  private fun interpolateFromFraction(fraction: Float): Float {
-    return diameterSmall + (diameterLarge - diameterSmall) * fraction
-  }
-
-  fun expand() {
-    if (isExpanding) {
-      return
+class TrashRenderer : InvalidateableRenderer(), Renderer, Parcelable {
+    private val outlinePaint = Paint().apply {
+        isAntiAlias = true
+        color = Color.WHITE
+        style = Paint.Style.STROKE
+        strokeWidth = DimensionUnit.DP.toPixels(1.5f)
     }
 
-    isExpanding = true
-    startTime = System.currentTimeMillis()
-    invalidate()
-  }
-
-  fun shrink() {
-    if (!isExpanding) {
-      return
+    private val shadePaint = Paint().apply {
+        isAntiAlias = true
+        color = 0x99000000.toInt()
+        style = Paint.Style.FILL
     }
 
-    isExpanding = false
-    startTime = System.currentTimeMillis()
-    invalidate()
-  }
+    private val bounds = RectF()
 
-  override fun hitTest(x: Float, y: Float): Boolean {
-    val dx = x - buttonCenter[0]
-    val dy = y - buttonCenter[1]
-    val radius = diameterLarge / 2
+    private val diameterSmall = DimensionUnit.DP.toPixels(41f)
+    private val diameterLarge = DimensionUnit.DP.toPixels(54f)
+    private val trashSize: Int = DimensionUnit.DP.toPixels(24f).toInt()
+    private val padBottom = DimensionUnit.DP.toPixels(16f)
+    private val interpolator: Interpolator = FastOutSlowInInterpolator()
 
-    return dx * dx + dy * dy < radius * radius
-  }
+    private var startTime = 0L
 
-  override fun describeContents(): Int {
-    return 0
-  }
+    private var isExpanding = false
 
-  override fun writeToParcel(dest: Parcel, flags: Int) {}
+    private val buttonCenter = FloatArray(2)
 
-  companion object {
+    override fun render(rendererContext: RendererContext) {
+        super.render(rendererContext)
 
-    private const val DURATION = 150L
+        val frameRenderTime = System.currentTimeMillis()
 
-    @JvmField
-    val CREATOR: Parcelable.Creator<TrashRenderer> = object : Parcelable.Creator<TrashRenderer> {
-      override fun createFromParcel(`in`: Parcel): TrashRenderer {
-        return TrashRenderer()
-      }
+        val trash: Drawable = requireNotNull(
+            AppCompatResources.getDrawable(
+                rendererContext.context,
+                CoreUtilR.drawable.ic_trash_white_24
+            )
+        )
+        trash.setBounds(0, 0, trashSize, trashSize)
 
-      override fun newArray(size: Int): Array<TrashRenderer?> {
-        return arrayOfNulls(size)
-      }
+        val diameter = getInterpolatedDiameter(frameRenderTime - startTime)
+
+        rendererContext.canvas.save()
+        rendererContext.mapRect(bounds, Bounds.FULL_BOUNDS)
+
+        buttonCenter[0] = bounds.centerX()
+        buttonCenter[1] = bounds.bottom - diameterLarge / 2f - padBottom
+
+        rendererContext.canvasMatrix.setToIdentity()
+
+        rendererContext.canvas.drawCircle(
+            buttonCenter[0],
+            buttonCenter[1],
+            diameter / 2f,
+            shadePaint
+        )
+        rendererContext.canvas.drawCircle(
+            buttonCenter[0],
+            buttonCenter[1],
+            diameter / 2f,
+            outlinePaint
+        )
+        rendererContext.canvas.translate(
+            bounds.centerX(),
+            bounds.bottom - diameterLarge / 2f - padBottom
+        )
+        rendererContext.canvas.translate(-(trashSize / 2f), -(trashSize / 2f))
+        trash.draw(rendererContext.canvas)
+        rendererContext.canvas.restore()
+
+        if (frameRenderTime - DURATION < startTime) {
+            invalidate()
+        }
     }
-  }
+
+    private fun getInterpolatedDiameter(timeElapsed: Long): Float {
+        return if (timeElapsed >= DURATION) {
+            if (isExpanding) {
+                diameterLarge
+            } else {
+                diameterSmall
+            }
+        } else {
+            val interpolatedFraction = interpolator.getInterpolation(timeElapsed / DURATION.toFloat())
+            if (isExpanding) {
+                interpolateFromFraction(interpolatedFraction)
+            } else {
+                interpolateFromFraction(1 - interpolatedFraction)
+            }
+        }
+    }
+
+    private fun interpolateFromFraction(fraction: Float): Float {
+        return diameterSmall + (diameterLarge - diameterSmall) * fraction
+    }
+
+    fun expand() {
+        if (isExpanding) {
+            return
+        }
+
+        isExpanding = true
+        startTime = System.currentTimeMillis()
+        invalidate()
+    }
+
+    fun shrink() {
+        if (!isExpanding) {
+            return
+        }
+
+        isExpanding = false
+        startTime = System.currentTimeMillis()
+        invalidate()
+    }
+
+    override fun hitTest(x: Float, y: Float): Boolean {
+        val dx = x - buttonCenter[0]
+        val dy = y - buttonCenter[1]
+        val radius = diameterLarge / 2
+
+        return dx * dx + dy * dy < radius * radius
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {}
+
+    companion object {
+
+        private const val DURATION = 150L
+
+        @JvmField
+        val CREATOR: Parcelable.Creator<TrashRenderer> = object :
+            Parcelable.Creator<TrashRenderer> {
+            override fun createFromParcel(`in`: Parcel): TrashRenderer {
+                return TrashRenderer()
+            }
+
+            override fun newArray(size: Int): Array<TrashRenderer?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
 }

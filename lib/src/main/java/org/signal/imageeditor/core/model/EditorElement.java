@@ -3,6 +3,7 @@ package org.signal.imageeditor.core.model;
 import android.graphics.Matrix;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,7 +37,8 @@ import java.util.UUID;
  */
 public final class EditorElement implements Parcelable {
 
-  private static final Comparator<EditorElement> Z_ORDER_COMPARATOR = (e1, e2) -> Integer.compare(e1.zOrder, e2.zOrder);
+  private static final Comparator<EditorElement> Z_ORDER_COMPARATOR = (e1, e2) -> Integer.compare(e1.zOrder,
+                                                                                                  e2.zOrder);
 
   private final UUID        id;
   private final EditorFlags flags;
@@ -72,12 +74,19 @@ public final class EditorElement implements Parcelable {
   }
 
   private EditorElement(Parcel in) {
-    id       = ParcelUtils.readUUID(in);
-    flags    = new EditorFlags(in.readInt());
+    id    = ParcelUtils.readUUID(in);
+    flags = new EditorFlags(in.readInt());
+
     ParcelUtils.readMatrix(localMatrix, in);
+//        float[] values = new float[9];
+//        in.readFloatArray(values);
+//        localMatrix.setValues(values);
+//        Log.d("EditorElement", "end 3parse matrix " + Arrays.toString(values));
+
     renderer = in.readParcelable(Renderer.class.getClassLoader());
     zOrder   = in.readInt();
     in.readTypedList(children, EditorElement.CREATOR);
+    Log.d("EditorElement", "end new element " + hashCode());
   }
 
   UUID getId() {
@@ -154,11 +163,18 @@ public final class EditorElement implements Parcelable {
     return editorMatrix;
   }
 
-  EditorElement findElement(@NonNull EditorElement toFind, @NonNull Matrix viewMatrix, @NonNull Matrix outInverseModelMatrix) {
+  EditorElement findElement(@NonNull EditorElement toFind,
+                            @NonNull Matrix viewMatrix,
+                            @NonNull Matrix outInverseModelMatrix)
+  {
     return findElement(viewMatrix, outInverseModelMatrix, (element, inverseMatrix) -> toFind == element);
   }
 
-  EditorElement findElementAt(float x, float y, @NonNull Matrix viewModelMatrix, @NonNull Matrix outInverseModelMatrix) {
+  EditorElement findElementAt(float x,
+                              float y,
+                              @NonNull Matrix viewModelMatrix,
+                              @NonNull Matrix outInverseModelMatrix)
+  {
     final float[] dst = new float[2];
     final float[] src = { x, y };
 
@@ -170,7 +186,10 @@ public final class EditorElement implements Parcelable {
     });
   }
 
-  public EditorElement findElement(@NonNull Matrix viewModelMatrix, @NonNull Matrix outInverseModelMatrix, @NonNull FindElementPredicate predicate) {
+  public EditorElement findElement(@NonNull Matrix viewModelMatrix,
+                                   @NonNull Matrix outInverseModelMatrix,
+                                   @NonNull FindElementPredicate predicate)
+  {
     temp.set(viewModelMatrix);
 
     temp.preConcat(localMatrix);
@@ -272,7 +291,8 @@ public final class EditorElement implements Parcelable {
     alphaAnimation = AlphaAnimation.animate(alphaAnimation.getValue(), 1f, invalidate);
   }
 
-  @Nullable EditorElement parentOf(@NonNull EditorElement element) {
+  @Nullable
+  EditorElement parentOf(@NonNull EditorElement element) {
     if (children.contains(element)) {
       return this;
     }
@@ -356,7 +376,10 @@ public final class EditorElement implements Parcelable {
    * @param source      Matrix value to set
    * @param invalidate  Callback to allow animation
    */
-  private void setMatrixWithAnimation(@NonNull Matrix destination, @NonNull Matrix source, @Nullable Runnable invalidate) {
+  private void setMatrixWithAnimation(@NonNull Matrix destination,
+                                      @NonNull Matrix source,
+                                      @Nullable Runnable invalidate)
+  {
     Matrix old = new Matrix(destination);
     animationMatrix.stop();
     animationMatrix.preConcatValueTo(old);
@@ -392,7 +415,7 @@ public final class EditorElement implements Parcelable {
   }
 
   @Override
-  public void writeToParcel(Parcel dest, int flags) {
+  public void writeToParcel(@NonNull Parcel dest, int flags) {
     ParcelUtils.writeUUID(dest, id);
     dest.writeInt(this.flags.asInt());
     ParcelUtils.writeMatrix(dest, localMatrix);

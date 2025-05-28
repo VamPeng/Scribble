@@ -1,6 +1,7 @@
 package com.demo.scribbledemo;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,6 +12,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.demo.scribbledemo.renderers.UrlRenderer;
+import com.tencent.mmkv.MMKV;
 
 import org.signal.imageeditor.core.ImageEditorView;
 import org.signal.imageeditor.core.RendererContext;
@@ -56,9 +60,7 @@ public final class MainActivity extends AppCompatActivity {
     }
   };
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  private void initView() {
     setContentView(R.layout.main_activity);
 
     Toolbar toolbar = findViewById(R.id.toolbar);
@@ -70,7 +72,8 @@ public final class MainActivity extends AppCompatActivity {
     imageEditorView.setTypefaceProvider(typefaceProvider);
 
     imageEditorView.setUndoRedoStackListener((undoAvailable, redoAvailable) -> {
-      Log.d("ALAN", String.format("Undo/Redo available: %s, %s", undoAvailable ? "Y" : "N", redoAvailable ? "Y" : "N"));
+      Log.d("ALAN",
+            String.format("Undo/Redo available: %s, %s", undoAvailable ? "Y" : "N", redoAvailable ? "Y" : "N"));
       if (menu == null) return;
       MenuItem undo = menu.findItem(R.id.action_undo);
       MenuItem redo = menu.findItem(R.id.action_redo);
@@ -79,10 +82,6 @@ public final class MainActivity extends AppCompatActivity {
     });
 
     EditorModel model = null;
-    if (savedInstanceState != null) {
-      model = savedInstanceState.getParcelable("MODEL");
-      Log.d("ALAN", "Restoring instance " + (model != null ? model.hashCode() : 0));
-    }
 
     if (model == null) {
       model = initialModel();
@@ -114,44 +113,56 @@ public final class MainActivity extends AppCompatActivity {
     });
   }
 
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    MMKV.initialize(getApplicationContext());
+//        initView();
+
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    Context context = this;
+    new Handler(Looper.getMainLooper())
+        .postDelayed(() -> {
+          startActivity(new Intent(context, EditorActivity.class));
+          finish();
+        }, 1000);
+  }
+
   private static EditorModel initialModel() {
 
     EditorModel model = EditorModel.create(0xFF000000);
 
-    EditorElement image = new EditorElement(new UrlRenderer("https://cdn.aarp.net/content/dam/aarp/home-and-family/your-home/2018/06/1140-house-inheriting.imgcache.rev68c065601779c5d76b913cf9ec3a977e.jpg"));
+    EditorElement image = new EditorElement(new UrlRenderer(
+        "https://cdn.aarp.net/content/dam/aarp/home-and-family/your-home/2018/06/1140-house-inheriting.imgcache.rev68c065601779c5d76b913cf9ec3a977e.jpg"));
     image.getFlags().setSelectable(false).persist();
     model.addElement(image);
 
-    EditorElement elementC = new EditorElement(new UrlRenderer("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/220px-SNice.svg.png"));
+    EditorElement elementC = new EditorElement(new UrlRenderer(
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/220px-SNice.svg.png"));
     elementC.getLocalMatrix().postScale(0.2f, 0.2f);
     //elementC.getLocalMatrix().postRotate(30);
     model.addElement(elementC);
 
-//    EditorElement elementE = new EditorElement(new UrlRenderer("https://www.vitalessentialsraw.com/assets/images/background-images/laying-grey-cat.png"));
-//    elementE.getLocalMatrix().postScale(0.2f, 0.2f);
-    //elementE.getLocalMatrix().postRotate(60);
-//    model.addElement(elementE);
-
-//    EditorElement elementD = new EditorElement(new UrlRenderer("https://petspluslubbocktx.com/files/2016/11/DC-Cat-Weight-Management.png"));
-//    elementD.getLocalMatrix().postScale(0.2f, 0.2f);
-    //elementD.getLocalMatrix().postRotate(60);
-//    model.addElement(elementD);
-
-    EditorElement elementF = new EditorElement(new UrlRenderer("https://purepng.com/public/uploads/large/purepng.com-black-top-hathatsstandard-sizeblacktop-14215263591972x0zh.png"));
+    EditorElement elementF = new EditorElement(new UrlRenderer(
+        "https://purepng.com/public/uploads/large/purepng.com-black-top-hathatsstandard-sizeblacktop-14215263591972x0zh.png"));
     elementF.getLocalMatrix().postScale(0.2f, 0.2f);
     //elementF.getLocalMatrix().postRotatF(60);
     model.addElement(elementF);
 
-//    EditorElement elementG = new EditorElement(new UriRenderer(Uri.parse("file:///android_asset/food/apple.png")));
-//    elementG.getLocalMatrix().postScale(0.2f, 0.2f);
-//    //elementG.getLocalMatrix().postRotatG(60);
-//    model.addElement(elementG);
-
-    EditorElement elementH = new EditorElement(new MultiLineTextRenderer("Hello, World!", 0xff0000ff, MultiLineTextRenderer.Mode.REGULAR));
+    EditorElement elementH = new EditorElement(new MultiLineTextRenderer("Hello, World!",
+                                                                         0xff0000ff,
+                                                                         MultiLineTextRenderer.Mode.REGULAR));
     //elementH.getLocalMatrix().postScale(0.2f, 0.2f);
     model.addElement(elementH);
 
-    EditorElement elementH2 = new EditorElement(new MultiLineTextRenderer("Hello, World 2!", 0xff0000ff, MultiLineTextRenderer.Mode.REGULAR));
+    EditorElement elementH2 = new EditorElement(new MultiLineTextRenderer("Hello, World 2!",
+                                                                          0xff0000ff,
+                                                                          MultiLineTextRenderer.Mode.REGULAR));
     //elementH.getLocalMatrix().postScale(0.2f, 0.2f);
     model.addElement(elementH2);
 
@@ -233,25 +244,25 @@ public final class MainActivity extends AppCompatActivity {
 
   private void editText() {
     imageEditorView.getModel().getRoot().findElement(new Matrix(), new Matrix(), (element, inverseMatrix) -> {
-      if (element.getRenderer() instanceof MultiLineTextRenderer) {
-        imageEditorView.startTextEditing(element);
-        return true;
-      }
-      return false;
-    }
+                                                       if (element.getRenderer() instanceof MultiLineTextRenderer) {
+                                                         imageEditorView.startTextEditing(element);
+                                                         return true;
+                                                       }
+                                                       return false;
+                                                     }
     );
   }
 
   private Uri saveBmp(Bitmap bitmap) {
     String path = Environment.getExternalStorageDirectory().toString();
 
-    File filePath = new File(path);
+    File filePath    = new File(path);
     File imageEditor = new File(filePath, "ImageEditor");
     if (!imageEditor.exists()) {
       imageEditor.mkdir();
     }
 
-    int counter = 0;
+    int  counter = 0;
     File file;
     do {
       counter++;
@@ -262,7 +273,10 @@ public final class MainActivity extends AppCompatActivity {
       try (OutputStream stream = new FileOutputStream(file)) {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream);
       }
-      return Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(), file.getAbsolutePath(), file.getName(), file.getName()));
+      return Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(),
+                                                           file.getAbsolutePath(),
+                                                           file.getName(),
+                                                           file.getName()));
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     } catch (IOException e) {

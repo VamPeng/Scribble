@@ -3,8 +3,48 @@
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
+    <color name="red_500">#F44336</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="signal_dark_colorSurfaceVariant">#303133</color>
+    <color name="signal_colorBackground">#1B1C1F</color>
+    <color name="signal_dark_colorOnSecondaryContainer">#DCE1F9</color>
+    <color name="signal_dark_colorOnSurface">#E2E1E5</color>
+    <color name="signal_dark_colorOnPrimaryContainer">#DBE1FC</color>
+    <color name="transparent_black_40">#66000000</color>
+    <color name="signal_dark_colorSurface">#1B1C1F</color>
+    <color name="transparent_white_10">#18FFFFFF</color>
+
+    <color name="signal_dark_colorOnSecondary">#2A3042</color>
+    <color name="signal_dark_colorOnSurfaceVariant">#BEBFC5</color>
+    <color name="signal_dark_colorOnSurfaceVariant1">#4D5059</color>
+    <color name="signal_dark_colorOnBackground">#E2E1E5</color>
+    <color name="signal_dark_colorOutline">#5C5E65</color>
+    <color name="signal_dark_neutralSurface">#14FFFFFF</color>
+    <color name="signal_dark_colorOnCustom">#FFFFFF</color>
+    <color name="signal_dark_colorOnCustomVariant">#B3FFFFFF</color>
+
+    <color name="signal_colorPrimary">#B6C5FA</color>
+    <color name="signal_colorPrimaryContainer">#464B5C</color>
+    <color name="signal_colorSecondary">#C1C6DD</color>
+    <color name="signal_colorSecondaryContainer">#414659</color>
+    <color name="signal_colorSurface">#1B1C1F</color>
+    <color name="signal_colorSurface1">#F2F5F9</color>
+    <color name="core_ultramarine_light">#6191F3</color>
+    <color name="signal_colorSurfaceVariant">#303133</color>
+    <color name="signal_colorOnPrimary">#1E2438</color>
+    <color name="signal_colorOnPrimaryContainer">@color/signal_dark_colorOnPrimaryContainer</color>
+    <color name="signal_colorOnSecondary">@color/signal_dark_colorOnSecondary</color>
+    <color name="signal_colorOnSecondaryContainer">@color/signal_dark_colorOnSecondaryContainer</color>
+    <color name="signal_colorOnSurface">@color/signal_dark_colorOnSurface</color>
+    <color name="signal_colorOnSurfaceVariant">@color/signal_dark_colorOnSurfaceVariant</color>
+    <color name="signal_colorOnSurfaceVariant1">@color/signal_dark_colorOnSurfaceVariant1</color>
+    <color name="signal_colorOnBackground">@color/signal_dark_colorOnBackground</color>
+    <color name="signal_colorOutline">@color/signal_dark_colorOutline</color>
+    <color name="signal_neutralSurface">@color/signal_dark_neutralSurface</color>
+    <color name="signal_colorOnCustom">@color/signal_dark_colorOnCustom</color>
+    <color name="signal_colorOnCustomVariant">@color/signal_dark_colorOnCustomVariant</color>
 </resources>

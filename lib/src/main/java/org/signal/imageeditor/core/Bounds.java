@@ -32,7 +32,7 @@ public final class Bounds {
                                           Bounds.RIGHT, Bounds.BOTTOM,
                                           Bounds.LEFT,  Bounds.BOTTOM };
 
-  static RectF newFullBounds() {
+  public static RectF newFullBounds() {
     return new RectF(LEFT, TOP, RIGHT, BOTTOM);
   }
 
