@@ -4,6 +4,7 @@
 ### 隐藏部分
 - 贴纸
 
-![pic1](imgs/1.jpg)
-![pic2](imgs/2.jpg)
-![pic3](imgs/3.jpg)
+<img src="imgs/1.jpg" alt="示例1" width="50%">
+<img src="imgs/2.jpg" alt="示例2" width="50%">
+<img src="imgs/3.jpg" alt="pic3" width="50%">
+
